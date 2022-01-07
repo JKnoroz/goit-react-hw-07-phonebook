@@ -1,19 +1,19 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import * as actions from '../../redux/actions';
-import { getContacts, getFilter } from '../../redux/selectors';
+import { useSelector } from 'react-redux';
+import { getFilter } from '../../redux/selectors';
+
+import { useDeleteContactMutation } from '../../redux/phonebook';
 
 import PropTypes from 'prop-types';
 import s from './ContactList.module.css';
 
-function ContactList() {
-  const contacts = useSelector(getContacts);
+function ContactList({ contacts }) {
   const filter = useSelector(getFilter);
   const visibleContacts = contacts.filter(contact => {
     return contact.name.toLowerCase().includes(filter.toLowerCase());
   });
-  const dispatch = useDispatch();
-  const deleteContact = id => dispatch(actions.deleteContact(id));
+
+  const [deleteContact] = useDeleteContactMutation();
 
   return (
     <ul className={s.list}>

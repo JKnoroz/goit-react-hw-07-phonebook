@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import * as actions from '../../redux/actions';
-import { getContacts } from '../../redux/selectors';
+import {
+  useAddContactMutation,
+  useFetchContactsQuery,
+} from '../../redux/phonebook';
 
 import PropTypes from 'prop-types';
 import s from './ContactForm.module.css';
@@ -9,8 +10,8 @@ import s from './ContactForm.module.css';
 function ContactForm() {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-  const contacts = useSelector(getContacts);
-  const dispatch = useDispatch();
+  const { data: contacts } = useFetchContactsQuery();
+  const [addContact, { isLoading }] = useAddContactMutation();
 
   const handleChange = ({ target }) => {
     const { name, value } = target;
@@ -22,6 +23,8 @@ function ContactForm() {
     setNumber('');
   }
 
+  console.log(contacts);
+
   function handleSubmit(e) {
     e.preventDefault();
     const contact = {
@@ -31,7 +34,7 @@ function ContactForm() {
     if (contacts.find(el => el.name === contact.name)) {
       alert(`${contact.name} is already in contacts!`);
     } else {
-      dispatch(actions.addContact(contact));
+      addContact(contact);
     }
     reset();
   }
@@ -64,7 +67,7 @@ function ContactForm() {
           onChange={handleChange}
         ></input>
       </label>
-      <button type="submit" className={s.button}>
+      <button type="submit" className={s.button} disabled={isLoading}>
         ADD CONTACT
       </button>
     </form>
