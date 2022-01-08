@@ -23,8 +23,6 @@ function ContactForm() {
     setNumber('');
   }
 
-  console.log(contacts);
-
   function handleSubmit(e) {
     e.preventDefault();
     const contact = {
