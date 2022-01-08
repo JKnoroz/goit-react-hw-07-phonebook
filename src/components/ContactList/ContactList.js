@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { getFilter } from '../../redux/selectors';
+import { getFilter, getVisibleContacts } from '../../redux/selectors';
 
 import { useDeleteContactMutation } from '../../redux/phonebook';
 
@@ -9,9 +9,12 @@ import s from './ContactList.module.css';
 
 function ContactList({ contacts }) {
   const filter = useSelector(getFilter);
-  const visibleContacts = contacts.filter(contact => {
-    return contact.name.toLowerCase().includes(filter.toLowerCase());
-  });
+  const visibleContacts = useSelector(state =>
+    getVisibleContacts(state, contacts),
+  );
+  // const visibleContacts = contacts.filter(contact => {
+  //   return contact.name.toLowerCase().includes(filter.toLowerCase());
+  // });
 
   const [deleteContact] = useDeleteContactMutation();
 
